@@ -49,7 +49,7 @@ nodemon (dev dependency): Utility that monitors for file changes and automatical
 
 Bd-task/
 │
-├── frontend/                  # Contains HTML pages for UI
+├── frontend/
 │   ├── register-scp.html
 │   ├── register-farmer.html
 │   ├── login-scp.html
@@ -59,7 +59,7 @@ Bd-task/
 │
 ├── src/
 │   ├── config/
-│   │   └── database.js         # PostgreSQL connection setup
+│   │   └── database.js       
 │   ├── controllers/
 │   │   ├── authController.js
 │   │   ├── scpController.js
