@@ -48,7 +48,6 @@ nodemon (dev dependency): Utility that monitors for file changes and automatical
 📁 Project Structure
 
 Bd-task/
-│
 ├── frontend/
 │   ├── register-scp.html
 │   ├── register-farmer.html
@@ -56,10 +55,9 @@ Bd-task/
 │   ├── login-farmer.html
 │   ├── scp-dashboard.html
 │   └── farmer-network.html
-│
 ├── src/
 │   ├── config/
-│   │   └── database.js       
+│   │   └── database.js
 │   ├── controllers/
 │   │   ├── authController.js
 │   │   ├── scpController.js
@@ -74,9 +72,9 @@ Bd-task/
 │   │   └── farmerRoutes.js
 │   └── utils/
 │       └── jwtUtils.js
-│
-├── app.js                     # App entry point
+├── app.js
 └── .gitignore
+
 
 📮 API Endpoints
 
