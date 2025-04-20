@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farmer Network</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #farmer-details, #scp-details {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        strong {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Farmer Network</h1>
+        <div id="farmer-details">
+            <h2>Your Details</h2>
+            <p><strong>Name:</strong> <span id="farmer-name"></span></p>
+            <p><strong>Email:</strong> <span id="farmer-email"></span></p>
+        </div>
+        <div id="scp-details">
+            <h2>Your Service Center Partner</h2>
+            <p><strong>Name:</strong> <span id="scp-name"></span></p>
+            <p><strong>Email:</strong> <span id="scp-email"></span></p>
+            <p class="error-message" id="networkError"></p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchNetworkData() {
+            const token = localStorage.getItem('authToken');
+            const networkErrorDiv = document.getElementById('networkError');
+
+            if (!token) {
+                window.location.href = '/login-farmer.html'; 
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/farmers/network', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('farmer-name').textContent = data.farmer.name;
+                    document.getElementById('farmer-email').textContent = data.farmer.email;
+                    document.getElementById('scp-name').textContent = data.registeredScp ? data.registeredScp.name : 'No SCP Assigned';
+                    document.getElementById('scp-email').textContent = data.registeredScp ? data.registeredScp.email : '';
+                    networkErrorDiv.textContent = ''; 
+                } else {
+                    console.error('Failed to fetch network data:', response.status);
+                    networkErrorDiv.textContent = 'Failed to load network data. Please try again later.';
+                    if (response.status === 401) {
+                        window.location.href = '/login-farmer.html'; 
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching network data:', error);
+                networkErrorDiv.textContent = 'An error occurred while loading network data.';
+            }
+        }
+
+        window.onload = fetchNetworkData;
+    </script>
+</body>
+</html>

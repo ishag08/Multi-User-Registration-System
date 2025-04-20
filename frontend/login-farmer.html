@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farmer Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 90%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: calc(100% - 16px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .info-message {
+            color: #007bff;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Farmer Login</h1>
+        <div id="notLoggedInError" class="error-message" style="display:none;">
+            You must be logged in as a Service Center Partner to access this functionality.
+        </div>
+        <div class="info-message">
+            This page is for farmers to log in. If you are a Service Center Partner (SCP) and are seeing this, please navigate to the SCP login page.
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+            <div id="errorMessage" class="error-message"></div>
+        </form>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('authToken');
+            const notLoggedInErrorDiv = document.getElementById('notLoggedInError');
+            const loginForm = document.getElementById('loginForm');
+            const errorMessageDiv = document.getElementById('errorMessage');
+
+            // Check if a token exists, if so, it might indicate an SCP is logged in
+            if (token) {
+                // Optionally, you could make a quick API call to /scp/dashboard
+                // to verify the token belongs to an SCP. If it succeeds,
+                // display the info message.
+                fetch('http://localhost:3000/scp/dashboard', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Token is valid for an SCP, display info message
+                    } else {
+                        // Token is invalid or not for SCP, proceed with farmer login
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking SCP login:', error);
+                    // Proceed with farmer login in case of network error
+                });
+            }
+
+            loginForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    const response = await fetch('http://localhost:3000/auth/login/farmer', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email, password }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        localStorage.setItem('authToken', data.token);
+                        window.location.href = '/farmer-network.html';
+                    } else if (response.status === 401) {
+                        errorMessageDiv.textContent = data.message || 'Invalid credentials.';
+                    } else {
+                        errorMessageDiv.textContent = data.message || 'Login failed.';
+                    }
+
+                } catch (error) {
+                    console.error('Error during login:', error);
+                    errorMessageDiv.textContent = 'Network error occurred.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

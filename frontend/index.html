@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AgriConnect</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #28a745; 
+            margin-bottom: 40px; 
+            text-align: center;
+            font-size: 2.5em; 
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 15px; 
+            justify-content: center; 
+        }
+
+        .button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-decoration: none;
+            color: white;
+            min-width: 220px; 
+            text-align: center;
+            background-color: #45c045; 
+        }
+
+        .button:hover {
+            background-color: #6d9320; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to AgriConnect</h1>
+    <div class="button-container">
+        <a href="/login-scp.html" class="button">SCP Login</a>
+        <a href="/register-scp.html" class="button">SCP Registration</a>
+        <a href="/scp-dashboard.html" class="button">SCP Dashboard</a>
+        <a href="/login-farmer.html" class="button">Farmer Login</a>
+        <a href="/register-farmer.html" class="button">Farmer Registration</a>
+        <a href="/farmer-network.html" class="button">Farmer Network</a>
+    </div>
+</body>
+</html>
